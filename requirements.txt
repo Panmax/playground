@@ -2,5 +2,5 @@ leancloud-sdk
 flask
 Flask-Login==0.2.11
 Flask-WTF
-Flask-Bootstrap
+git+https://github.com/Panmax/flask-bootstrap.git
 Flask-Moment

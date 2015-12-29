@@ -1,10 +1,24 @@
 {% extends 'bootstrap/base.html' %}
 
-{% block head %}{% endblock %}
+{% block html_attribs %}
+    lang="zh-CN"
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
 
 {% block title %} PlayGround {% endblock %}
 
 {% block navbar %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">PlayGround</a>
+            </div>
+            <button type="button" class="btn btn-primary navbar-btn">未读消息<span class="badge">4</span></button>
+        </div>
+    </nav>
 {% endblock %}
 
 {% block content %}
