@@ -1,25 +1,80 @@
 {% extends "base.html" %}
 
+{% block title %} Music Download {% endblock %}
+
 {% block head %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='audiojs/audio.min.js') }}"></script>
-    <script>
-        audiojs.events.ready(function () {
-            var as = audiojs.createAll();
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/audiojs/audio.min.js') }}"></script>
 {% endblock %}
 
 {% block page_content %}
-    <div class="jumbotron">
-        <h1>Hello, world!</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="music_name" class="col-md-2 control-label">歌曲名:</label>
 
-        <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured
-            content or information.</p>
+                    <div class="col-md-8">
+                        <input type="text" name="name" class="form-control" id="music_name" placeholder="Music Name"
+                               value="{{ name }}">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <audio preload="none"/>
+        </div>
+    </div>
 
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
-    </div>
-    <div>
-        <audio src="http://m6.file.xiami.com/110/3110/15632/3599639_2530181_h.mp3?auth_key=bdaa30dc2762143eb525666d7b151a46-1451865600-0-null" preload="auto" />
-    </div>
+    {% if musics %}
+        <div class="col-md-12">
+
+            <table class="table table-hover">
+                <tr>
+                    <th width="20%">歌曲</th>
+                    <th width="15%">歌手</th>
+                    <th width="25%">专辑</th>
+                    <th width="10%">播放</th>
+                    <th width="40%">下载地址</th>
+                </tr>
+                {% for music in musics %}
+                    <tr>
+                        <td>{{ music.song_name }}</td>
+                        <td>{{ music.singer_name }}</td>
+                        <td>{{ music.album_name }}</td>
+                        <td>
+{#                            <button type="button" class="btn btn-success btn-xs" v-on:click="playMusic('{{ music.audition_list[0].url }}')">Play</button>#}
+                            <div class="dropdown">
+                                <button type="button" id="dLabel" class="btn btn-success btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Play <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dLabel">
+                                    {% for audition in music.audition_list %}
+                                        <li><a v-on:click="playMusic('{{ audition.url }}')">{{ audition.typeDescription }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                {% for audition in music.audition_list %}
+                                    <button type="button" class="btn btn-primary btn-xs"
+                                       v-on:click="downLoad('{{ audition.url }}')">{{ audition.typeDescription }}</button>
+                                {% endfor %}
+                                {% for ll in music.ll_list %}
+                                    <button type="button" class="btn btn-primary btn-xs"
+                                       v-on:click="downLoad('{{ ll.url }}')">{{ ll.typeDescription }}</button>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/vue.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/music.js') }}"></script>
 {% endblock %}

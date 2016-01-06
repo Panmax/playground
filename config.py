@@ -11,7 +11,8 @@ class Config:
 
     @staticmethod
     def init_app(app):
-        pass
+        app.jinja_env.variable_start_string = '{{ '
+        app.jinja_env.variable_end_string = ' }}'
 
 
 class DevelopmentConfig(Config):

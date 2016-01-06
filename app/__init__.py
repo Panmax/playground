@@ -23,4 +23,7 @@ def create_app(config_name):
     from .music import music as music_blueprint
     app.register_blueprint(music_blueprint, url_prefix='/music')
 
+    from .wechat_who_delete_me import wechat_who_delete_me as wechat_who_delete_me_blueprint
+    app.register_blueprint(wechat_who_delete_me_blueprint, url_prefix='/who-delete-me')
+
     return app
