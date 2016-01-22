@@ -2,12 +2,27 @@
 
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
+from flask.ext.login import LoginManager
+
+from leancloud import Query
 
 from config import config
+from models import _User
 
 __author__ = 'pan'
 
 bootstrap = Bootstrap()
+login_manager = LoginManager()
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        user = Query(_User).get(user_id)
+    except Exception, e:
+        print e
+    else:
+        return user
 
 
 def create_app(config_name):
@@ -17,13 +32,17 @@ def create_app(config_name):
 
     bootstrap.init_app(app)
 
+    login_manager.session_protection = 'strong'
+    login_manager.login_view = 'auth.register'
+    login_manager.init_app(app)
+
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
     from .music import music as music_blueprint
     app.register_blueprint(music_blueprint, url_prefix='/music')
 
-    from .wechat_who_delete_me import wechat_who_delete_me as wechat_who_delete_me_blueprint
-    app.register_blueprint(wechat_who_delete_me_blueprint, url_prefix='/who-delete-me')
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     return app

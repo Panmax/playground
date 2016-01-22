@@ -2,10 +2,14 @@
 
 {% block page_content %}
     <div class="jumbotron">
-        <h1>Hello, world!</h1>
+        <h1>
+            你好,
+            {% if current_user.is_authenticated() %}
+                {{ current_user.username }}
+            {% else %}
+                星辰大海
+            {% endif %}!
+        </h1>
 
-        <p>Coming soon!</p>
-
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
     </div>
 {% endblock %}

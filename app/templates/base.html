@@ -6,6 +6,10 @@
 
 {% block head %}
     {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static',
+                                 filename='css/font-awesome.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static',
+                                 filename='css/bootstrap-social.css') }}" type="text/css">
 {% endblock %}
 
 {% block title %} PlayGround {% endblock %}
@@ -19,7 +23,27 @@
             <div>
                 <ul class="nav navbar-nav">
                     <li><a href="/music">Music <span class="sr-only">(current)</span></a></li>
+                    <li><a href="http://panmax.love/" target="_blank">Blog <span class="sr-only">(current)</span></a>
+                    </li>
                 </ul>
+                {% if current_user.is_authenticated() %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">{{ current_user.username }} <span
+                                    class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">修改资料</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ url_for('auth.logout') }}">退出登录</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+                    </ul>
+                {% endif %}
             </div>
         </div>
     </nav>
