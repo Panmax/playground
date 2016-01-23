@@ -19,7 +19,7 @@ def index():
         musics = json.loads(response.text).get('data')
     valid_musics = [music for music in musics if not music.get('out_list')]
     redis_op.notify('channel:music:download', event={
-        'musics': json.dumps(valid_musics)
+        'musics': valid_musics
     })
 
     return render_template('music/index.html', musics=valid_musics, name=name)

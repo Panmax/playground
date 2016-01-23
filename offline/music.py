@@ -23,7 +23,7 @@ class MusicDownload(task.OfflineTask):
     def on_message(self, message):
         logging.info(message)
         msg = json.loads(message['data'])
-        musics = json.loads(msg.get('musics'))
+        musics = msg.get('musics')
 
         # download
         for music in musics:
