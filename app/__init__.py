@@ -16,7 +16,7 @@ from models import _User
 from utils.redis_op import init_redis
 
 __author__ = 'pan'
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 bootstrap = Bootstrap()
 login_manager = LoginManager()

@@ -4,6 +4,8 @@
 
 import json
 import logging
+import StringIO
+import urllib2
 
 from leancloud import File
 
@@ -19,8 +21,9 @@ class MusicDownload(task.OfflineTask):
 
     def on_message(self, message):
         logging.info(message)
-        logging.info('aaaaaa')
-        msg = json.loads(message)
+        msg = json.loads(message['data'])
         url = msg.get('url')
-        f = File.create_with_url('a.mp3', url)
+        song_name = msg.get('song_name')
+        filename = u'{}.mp3'.format(song_name)
+        f = File(filename, StringIO.StringIO(urllib2.urlopen(url).read()))
         f.save()
