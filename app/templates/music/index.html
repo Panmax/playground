@@ -9,69 +9,63 @@
 
 {% block page_content %}
     <div class="row">
-        <div class="col-md-6">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label for="music_name" class="col-md-2 control-label">歌曲名:</label>
+        <div class="col-md-6 form-horizontal">
+            <div class="form-group">
+                <label for="music_name" class="col-md-2 control-label">歌曲名:</label>
 
-                    <div class="col-md-8">
-                        <input type="text" name="name" class="form-control" id="music_name" placeholder="Music Name"
-                               value="{{ name }}">
-                    </div>
+                <div class="col-md-8">
+                    <input type="text" name="name" class="form-control" id="music_name" placeholder="Music Name" v-model="keyword" v-on:keyup.enter="searchMusic">
                 </div>
-            </form>
+            </div>
         </div>
         <div class="col-md-6">
             <audio preload="none" loop="loop"/>
         </div>
     </div>
 
-    {% if musics %}
-        <div class="col-md-12">
-
-            <table class="table table-hover">
-                <tr>
-                    <th width="20%">歌曲</th>
-                    <th width="15%">歌手</th>
-                    <th width="25%">专辑</th>
-                    <th width="10%">播放</th>
-                    <th width="40%">下载地址</th>
-                </tr>
-                {% for music in musics %}
-                    <tr>
-                        <td>{{ music.song_name }}</td>
-                        <td>{{ music.singer_name }}</td>
-                        <td>{{ music.album_name }}</td>
-                        <td>
-{#                            <button type="button" class="btn btn-success btn-xs" v-on:click="playMusic('{{ music.audition_list[0].url }}')">Play</button>#}
-                            <div class="dropdown">
-                                <button type="button" id="dLabel" class="btn btn-success btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Play <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dLabel">
-                                    {% for audition in music.audition_list %}
-                                        <li><a v-on:click="playMusic('{{ audition.url }}')">{{ audition.typeDescription }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="row">
-                                {% for audition in music.audition_list %}
-                                    <button type="button" class="btn btn-primary btn-xs"
-                                       v-on:click="downLoad('{{ audition.url }}')">{{ audition.typeDescription }}</button>
-                                {% endfor %}
-                                {% for ll in music.ll_list %}
-                                    <button type="button" class="btn btn-primary btn-xs"
-                                       v-on:click="downLoad('{{ ll.url }}')">{{ ll.typeDescription }}</button>
-                                {% endfor %}
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-    {% endif %}
-
+    <div class="col-md-12" v-if="musics">
+        <table class="table table-hover">
+            <tr>
+                <th width="5%">收藏</th>
+                <th width="15%">歌曲</th>
+                <th width="15%">歌手</th>
+                <th width="20%">专辑</th>
+                <th width="15%">播放</th>
+                <th width="30%">下载地址</th>
+            </tr>
+            <tr v-for="music in musics">
+                <td>
+                    <button type="button" class="btn btn-default btn-sm"
+                            v-on:click="likeMusic(music.song_id)">
+                        <span v-bind:class="not_like" aria-hidden="true"></span>
+                    </button>
+                </td>
+                <td>{{music.song_name}}</td>
+                <td>{{music.singer_name}}</td>
+                <td>{{music.album_name}}</td>
+                <td>
+                    <div class="dropdown">
+                        <button type="button" id="dLabel" class="btn btn-success btn-xs" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Play <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dLabel">
+                            <li v-for="audition in music.audition_list">
+                                <a v-on:click="playMusic(audition.url)">{{audition.typeDescription}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <button type="button" class="btn btn-primary btn-xs"
+                               v-for="audition in music.audition_list" v-on:click="downLoad(audition.url)">{{audition.typeDescription}}</button>
+                        <button type="button" class="btn btn-primary btn-xs"
+                               v-for="ll in music.ll_list" v-on:click="downLoad(ll.url)">{{ll.typeDescription}}</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}
