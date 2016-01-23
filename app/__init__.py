@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
+import logging
 
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.login import LoginManager
 
+import gevent
+
 from leancloud import Query
+
+import offline
 
 from config import config
 from models import _User
+from utils.redis_op import init_redis
 
 __author__ = 'pan'
+logging.basicConfig(level=logging.INFO)
 
 bootstrap = Bootstrap()
 login_manager = LoginManager()
@@ -23,6 +30,13 @@ def load_user(user_id):
         print e
     else:
         return user
+
+
+def schedule():
+    for cls in offline.__all__:
+        instance = cls(init_redis())
+        gevent.spawn(instance.loop)
+schedule()
 
 
 def create_app(config_name):
