@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import requests
 import json
 
-from flask import request
+import requests
 from flask import render_template
+from flask import request
 
+from utils import redis_op
 from . import music
-__author__ = 'pan'
 
 
 @music.route('')
@@ -18,4 +18,23 @@ def index():
         response = requests.get(url)
         musics = json.loads(response.text).get('data')
     valid_musics = [music for music in musics if not music.get('out_list')]
+
+    # download
+    for music in valid_musics:
+        song_name = music.get('song_name')
+        # song_id = music.get('song_id')
+        # singer_name = music.get('singer_name')
+        # singer_id = music.get('singer_id')
+        audition_list = music.get('audition_list')
+        #
+        for audition in audition_list:
+            url = audition.get('url')
+            redis_op.notify('channel:music:download', event={
+                'song_name': song_name,
+                'url': url
+            })
+        #     filename = u'{}.mp3'.format(song_name)
+        #     f = File(filename, StringIO(urllib2.urlopen(url).read()))
+        #     f.save()
+
     return render_template('music/index.html', musics=valid_musics, name=name)

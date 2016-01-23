@@ -4,3 +4,5 @@ Flask-Login==0.2.11
 Flask-WTF
 git+https://github.com/Panmax/flask-bootstrap.git
 Flask-Moment
+redis
+gevent
