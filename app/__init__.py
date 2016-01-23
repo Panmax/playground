@@ -32,11 +32,11 @@ def load_user(user_id):
         return user
 
 
-def schedule():
-    for cls in offline.__all__:
-        instance = cls(init_redis())
-        gevent.spawn(instance.loop)
-schedule()
+# def schedule():
+#     for cls in offline.__all__:
+#         instance = cls(init_redis())
+#         gevent.spawn(instance.loop)
+# schedule()
 
 
 def create_app(config_name):
