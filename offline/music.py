@@ -24,7 +24,6 @@ class MusicDownload(task.OfflineTask):
         logging.info(message)
         msg = json.loads(message['data'])
         musics = msg.get('musics')
-        print type(musics)
 
         # download
         for music in musics:
@@ -36,29 +35,31 @@ class MusicDownload(task.OfflineTask):
             #
             for audition in audition_list:
                 url = audition.get('url')
-                duration = audition.get('duration')
-                suffix = audition.get('suffix')
-                bit_rate = audition.get('bitRate')
-                type_description = audition.get('typeDescription')
-                size = audition.get('size')
-
-                if not Query(Music).equal_to('song_id', song_id).equal_to('singer_id', singer_id)\
-                        .equal_to('bitRate', bit_rate).equal_to('typeDescription', type_description)\
-                        .equal_to('suffix', suffix).find():
-
-                    filename = u'{}-{}.mp3'.format(song_name, singer_name)
-                    f = File(filename, StringIO.StringIO(urllib2.urlopen(url).read()))
-                    f.save()
-
-                    m = Music()
-                    m.file = f
-                    m.duration = duration
-                    m.suffix = suffix
-                    m.bit_rate = bit_rate
-                    m.type_description = type_description
-                    m.size = size
-                    m.song_name = song_name
-                    m.song_id = song_id
-                    m.singer_name = singer_name
-                    m.singer_id = singer_id
-                    m.save()
+                print song_name
+                print url
+                # duration = audition.get('duration')
+                # suffix = audition.get('suffix')
+                # bit_rate = audition.get('bitRate')
+                # type_description = audition.get('typeDescription')
+                # size = audition.get('size')
+                #
+                # if not Query(Music).equal_to('song_id', song_id).equal_to('singer_id', singer_id)\
+                #         .equal_to('bitRate', bit_rate).equal_to('typeDescription', type_description)\
+                #         .equal_to('suffix', suffix).find():
+                #
+                #     filename = u'{}-{}.mp3'.format(song_name, singer_name)
+                #     f = File(filename, StringIO.StringIO(urllib2.urlopen(url).read()))
+                #     f.save()
+                #
+                #     m = Music()
+                #     m.file = f
+                #     m.duration = duration
+                #     m.suffix = suffix
+                #     m.bit_rate = bit_rate
+                #     m.type_description = type_description
+                #     m.size = size
+                #     m.song_name = song_name
+                #     m.song_id = song_id
+                #     m.singer_name = singer_name
+                #     m.singer_id = singer_id
+                #     m.save()
