@@ -126,3 +126,13 @@ class Music(LObject):
     @file.setter
     def file(self, f):
         self.set('file', f)
+
+
+class MusicSearchHistory(LObject):
+    @property
+    def keyword(self):
+        return self.get('keyword')
+
+    @property
+    def user(self):
+        return self.get('user')

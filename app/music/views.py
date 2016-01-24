@@ -2,10 +2,14 @@
 import json
 
 import requests
-from flask import request, render_template, make_response
+from flask import request, render_template, make_response, jsonify
+from flask.ext.login import login_required, current_user
+
+from leancloud import user
 
 from utils import redis_op
 from . import music
+from ..models import MusicSearchHistory
 
 
 @music.route('')
@@ -30,3 +34,22 @@ def api_get_musics():
         'musics': valid_musics
     })
     return make_response(json.dumps(valid_musics))
+
+
+@music.route('/api/music_search_history', methods=['GET', 'POST'])
+def api_user_search():
+    keyword = request.json.get('keyword')
+    music_search = MusicSearchHistory()
+    music_search.set('keyword', keyword)
+    if current_user.is_authenticated():
+        music_search.set('user', user.User.create_without_data(current_user.id))
+    music_search.save()
+    return jsonify(save=True)
+
+
+@music.route('/api/user_info')
+def api_user_info():
+    is_login = False
+    if current_user.is_authenticated():
+        is_login = True
+    return jsonify(is_login=is_login)

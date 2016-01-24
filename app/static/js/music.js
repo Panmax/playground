@@ -19,6 +19,7 @@ new Vue({
     },
 
     created: function () {
+        //this.checkIsLogin()
     },
 
     watch: {
@@ -37,6 +38,7 @@ new Vue({
             window.open(url)
         },
         searchMusic: function () {
+            this.addSearchHistory(this.keyword);
             var xhr = new XMLHttpRequest();
             var self = this;
             xhr.open('GET', '/music/api/get_musics?keyword=' + this.keyword);
@@ -58,6 +60,24 @@ new Vue({
                     this.musics[i].is_like = false
                 }
             }
+        },
+        addSearchHistory: function (keyname) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/music/api/music_search_history');
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            //xhr.onload = function () {
+            //    alert(xhr.responseText)
+            //};
+            xhr.send(JSON.stringify({keyword: keyname}));
+        },
+        checkIsLogin: function () {
+            var xhr = new XMLHttpRequest();
+            var self = this;
+            xhr.open('GET', '/music/api/user_info');
+            xhr.onload = function () {
+                alert(xhr.responseText)
+            };
+            xhr.send();
         }
     }
 });
