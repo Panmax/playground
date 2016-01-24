@@ -14,10 +14,6 @@ new Vue({
                     audio.play()
                 }
             }),
-        not_like: {
-            'glyphicon':true,
-            'glyphicon-heart-empty': true
-        },
         keyword: '',
         musics: null
     },
@@ -50,9 +46,18 @@ new Vue({
             xhr.send();
         },
         likeMusic: function (song_id) {
-            this.not_like['glyphicon-heart-empty'] = false;
-            this.not_like['glyphicon-heart'] = true;
-            this.not_like['text-danger'] = true;
+            for(i in this.musics) {
+                if(this.musics[i].song_id == song_id) {
+                    this.musics[i].is_like = true
+                }
+            }
+        },
+        cancelLikeMusic: function (song_id) {
+            for(i in this.musics) {
+                if(this.musics[i].song_id == song_id) {
+                    this.musics[i].is_like = false
+                }
+            }
         }
     }
-})
+});
