@@ -99,15 +99,11 @@ def api_music_favorite():
                 .contained_in('song_id', [music_favorite.song_id for music_favorite in music_favorites])\
                 .include('file.url')\
                 .find()
-            return make_response(json.dumps([format.format_music(music) for music in favorite_musics]))
+            results = []
+            for music in favorite_musics:
+                _music = format.format_music(music)
+                _music['is_like'] = True
+                results.append(_music)
+            return make_response(json.dumps(results))
     else:
         return jsonify(success=False), 401
-
-
-@music_blueprint.route('/api/user_info')
-def api_user_info():
-    is_login = False
-    if current_user.is_authenticated():
-        is_login = True
-    return jsonify(is_login=is_login)
-

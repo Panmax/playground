@@ -70,6 +70,36 @@
             </tr>
         </table>
     </div>
+
+    <div class="col-md-12" v-if="favorite_musics">
+        <table class="table table-hover">
+            <tr>
+                <th width="5%">收藏</th>
+                <th width="15%">歌曲</th>
+                <th width="15%">歌手</th>
+                <th width="20%">专辑</th>
+                <th width="15%">播放</th>
+            </tr>
+            <tr v-for="music in favorite_musics">
+                <td>
+                    <button type="button" class="btn btn-default btn-sm" v-if="!music.is_like"
+                            v-on:click="likeMusic(music)">
+                        <span v-bind:class="{'glyphicon':true, 'glyphicon-heart-empty': !music.is_like, 'glyphicon-heart': music.is_like, 'text-danger': music.is_like}" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" v-if="music.is_like"
+                            v-on:click="cancelLikeMusic(music)">
+                        <span v-bind:class="{'glyphicon':true, 'glyphicon-heart-empty': !music.is_like, 'glyphicon-heart': music.is_like, 'text-danger': music.is_like}" aria-hidden="true"></span>
+                    </button>
+                </td>
+                <td>{{music.song_name}}</td>
+                <td>{{music.singer_name}}</td>
+                <td>{{music.album_name}}</td>
+                <td>
+                    <button class="btn btn-success btn-sm" v-on:click="playMusic(music.url)">Play</button>
+                </td>
+            </tr>
+        </table>
+    </div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}

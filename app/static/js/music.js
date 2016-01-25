@@ -20,7 +20,6 @@ new Vue({
     },
 
     created: function () {
-        //this.checkIsLogin()
     },
 
     watch: {
@@ -40,7 +39,6 @@ new Vue({
         },
         searchMusic: function () {
             if (this.keyword == 'like') {
-                alert('like');
                 this.fetchMyFavoriteMusics();
                 return
             }
@@ -49,6 +47,7 @@ new Vue({
             var self = this;
             xhr.open('GET', '/music/api/get_musics?keyword=' + this.keyword);
             xhr.onload = function () {
+                self.favorite_musics = null;
                 self.musics = JSON.parse(xhr.responseText)
             };
             xhr.send();
@@ -99,17 +98,9 @@ new Vue({
             //};
             xhr.send(JSON.stringify({keyword: keyname}));
         },
-        checkIsLogin: function () {
-            var xhr = new XMLHttpRequest();
-            var self = this;
-            xhr.open('GET', '/music/api/user_info');
-            xhr.onload = function () {
-                alert(xhr.responseText)
-            };
-            xhr.send();
-        },
         fetchMyFavoriteMusics: function () {
             var xhr = new XMLHttpRequest();
+            var self = this;
             xhr.open('GET', '/music/api/music_favorite');
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onload = function () {
@@ -117,7 +108,8 @@ new Vue({
                     alert('请先登录');
                     return;
                 }
-                console.log(xhr.responseText)
+                self.musics = null;
+                self.favorite_musics = JSON.parse(xhr.responseText);
             };
             xhr.send();
         }
