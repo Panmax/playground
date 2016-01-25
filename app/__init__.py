@@ -6,6 +6,7 @@ from flask.ext.bootstrap import Bootstrap
 from flask.ext.login import LoginManager
 
 import gevent
+from gevent import monkey
 
 from leancloud import Query
 
@@ -17,6 +18,7 @@ from utils.redis_op import init_redis
 
 __author__ = 'pan'
 logging.basicConfig(level=logging.INFO)
+# monkey.patch_all()
 
 bootstrap = Bootstrap()
 login_manager = LoginManager()

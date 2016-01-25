@@ -136,3 +136,13 @@ class MusicSearchHistory(LObject):
     @property
     def user(self):
         return self.get('user')
+
+
+class MusicFavorite(LObject):
+    @property
+    def user(self):
+        return self.get('user')
+
+    @property
+    def song_id(self):
+        return self.get('song_id')

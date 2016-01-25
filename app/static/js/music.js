@@ -47,19 +47,42 @@ new Vue({
             };
             xhr.send();
         },
-        likeMusic: function (song_id) {
-            for(i in this.musics) {
-                if(this.musics[i].song_id == song_id) {
-                    this.musics[i].is_like = true
+        likeMusic: function (music) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/music/api/music_favorite');
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function () {
+                if (xhr.status == 401) {
+                    alert('请先登录');
+                    return;
                 }
-            }
+                var result = JSON.parse(xhr.responseText);
+                if (result.success) {
+                    music.is_like = true;
+                } else {
+                    alert(result.reason)
+                }
+            };
+            xhr.send(JSON.stringify({song_id: music.song_id}));
         },
-        cancelLikeMusic: function (song_id) {
-            for(i in this.musics) {
-                if(this.musics[i].song_id == song_id) {
-                    this.musics[i].is_like = false
+        cancelLikeMusic: function (music) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('DELETE', '/music/api/music_favorite');
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function () {
+                console.log(xhr.responseText)
+                if (xhr.status == 403) {
+                    alert('请先登录');
+                    return;
                 }
-            }
+                var result = JSON.parse(xhr.responseText);
+                if (result.success) {
+                    music.is_like = false;
+                } else {
+                    alert(result.reason)
+                }
+            };
+            xhr.send(JSON.stringify({song_id: music.song_id}));
         },
         addSearchHistory: function (keyname) {
             var xhr = new XMLHttpRequest();

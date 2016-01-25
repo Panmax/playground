@@ -36,11 +36,11 @@
             <tr v-for="music in musics">
                 <td>
                     <button type="button" class="btn btn-default btn-sm" v-if="!music.is_like"
-                            v-on:click="likeMusic(music.song_id)">
+                            v-on:click="likeMusic(music)">
                         <span v-bind:class="{'glyphicon':true, 'glyphicon-heart-empty': !music.is_like, 'glyphicon-heart': music.is_like, 'text-danger': music.is_like}" aria-hidden="true"></span>
                     </button>
                     <button type="button" class="btn btn-default btn-sm" v-if="music.is_like"
-                            v-on:click="cancelLikeMusic(music.song_id)">
+                            v-on:click="cancelLikeMusic(music)">
                         <span v-bind:class="{'glyphicon':true, 'glyphicon-heart-empty': !music.is_like, 'glyphicon-heart': music.is_like, 'text-danger': music.is_like}" aria-hidden="true"></span>
                     </button>
                 </td>
