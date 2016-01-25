@@ -3,7 +3,7 @@
  */
 
 new Vue({
-    el: '#app',
+    el: '#music',
 
     data: {
         play_url: '',
@@ -15,7 +15,8 @@ new Vue({
                 }
             }),
         keyword: '',
-        musics: null
+        musics: null,
+        favorite_musics: null
     },
 
     created: function () {
@@ -38,6 +39,11 @@ new Vue({
             window.open(url)
         },
         searchMusic: function () {
+            if (this.keyword == 'like') {
+                alert('like');
+                this.fetchMyFavoriteMusics();
+                return
+            }
             this.addSearchHistory(this.keyword);
             var xhr = new XMLHttpRequest();
             var self = this;
@@ -99,6 +105,19 @@ new Vue({
             xhr.open('GET', '/music/api/user_info');
             xhr.onload = function () {
                 alert(xhr.responseText)
+            };
+            xhr.send();
+        },
+        fetchMyFavoriteMusics: function () {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/music/api/music_favorite');
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function () {
+                if (xhr.status == 401) {
+                    alert('请先登录');
+                    return;
+                }
+                console.log(xhr.responseText)
             };
             xhr.send();
         }

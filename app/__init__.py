@@ -18,7 +18,7 @@ from utils.redis_op import init_redis
 
 __author__ = 'pan'
 logging.basicConfig(level=logging.INFO)
-# monkey.patch_all()
+monkey.patch_all()
 
 bootstrap = Bootstrap()
 login_manager = LoginManager()

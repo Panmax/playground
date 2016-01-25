@@ -80,6 +80,22 @@ class Music(LObject):
         self.set('singer_id', s)
 
     @property
+    def album_id(self):
+        return self.get('album_id')
+
+    @album_id.setter
+    def album_id(self, a):
+        self.set('album_id', a)
+
+    @property
+    def album_name(self):
+        return self.get('album_name')
+
+    @album_name.setter
+    def album_name(self, a):
+        self.set('album_name', a)
+
+    @property
     def bit_rate(self):
         return self.get('bitRate')
 

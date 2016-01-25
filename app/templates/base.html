@@ -50,7 +50,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container" id="app">
+    <div class="container" id="{% block content_id %}{% endblock %}">
         {% for message in get_flashed_messages() %}
             <div class="alert alert-warning">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>

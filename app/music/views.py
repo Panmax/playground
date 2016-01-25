@@ -8,9 +8,9 @@ from flask.ext.login import login_required, current_user
 
 from leancloud import user, Query, LeanCloudError
 
-from utils import redis_op
+from utils import redis_op, format
 from . import music as music_blueprint
-from ..models import MusicSearchHistory, MusicFavorite
+from ..models import MusicSearchHistory, MusicFavorite, Music
 
 
 @music_blueprint.route('')
@@ -69,9 +69,9 @@ def api_music_search_history():
 
 @music_blueprint.route('/api/music_favorite', methods=['GET', 'POST', 'DELETE'])
 def api_music_favorite():
-    song_id = int(request.json.get('song_id'))
     if current_user.is_authenticated():
         if request.method == 'POST':
+            song_id = int(request.json.get('song_id'))
             if Query(MusicFavorite)\
                     .equal_to('user', user.User.create_without_data(current_user.id))\
                     .equal_to('song_id', song_id).find():
@@ -82,6 +82,7 @@ def api_music_favorite():
             music_favorite.save()
             return jsonify(success=True)
         elif request.method == 'DELETE':
+            song_id = int(request.json.get('song_id'))
             try:
                 music_favorite = Query(MusicFavorite)\
                         .equal_to('user', user.User.create_without_data(current_user.id))\
@@ -91,6 +92,14 @@ def api_music_favorite():
             else:
                 music_favorite.destroy()
             return jsonify(success=True)
+        elif request.method == 'GET':
+            music_favorites = Query(MusicFavorite)\
+                .equal_to('user', user.User.create_without_data(current_user.id)).limit(20).find()
+            favorite_musics = Query(Music)\
+                .contained_in('song_id', [music_favorite.song_id for music_favorite in music_favorites])\
+                .include('file.url')\
+                .find()
+            return make_response(json.dumps([format.format_music(music) for music in favorite_musics]))
     else:
         return jsonify(success=False), 401
 
@@ -101,3 +110,4 @@ def api_user_info():
     if current_user.is_authenticated():
         is_login = True
     return jsonify(is_login=is_login)
+

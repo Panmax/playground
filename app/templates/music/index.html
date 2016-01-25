@@ -7,14 +7,14 @@
     <script src="{{ url_for('static', filename='js/audiojs/audio.min.js') }}"></script>
 {% endblock %}
 
+{% block content_id %}music{% endblock %}
+
 {% block page_content %}
     <div class="row">
         <div class="col-md-6 form-horizontal">
             <div class="form-group">
-                <label for="music_name" class="col-md-2 control-label">歌曲名:</label>
-
-                <div class="col-md-8">
-                    <input type="text" name="name" class="form-control" id="music_name" placeholder="Music Name" v-model="keyword" v-on:keyup.enter="searchMusic">
+                <div class="col-md-12">
+                    <input type="text" name="name" class="form-control" id="music_name" placeholder="歌曲名/歌手/专辑/like" v-model="keyword" v-on:keyup.enter="searchMusic">
                 </div>
             </div>
         </div>
