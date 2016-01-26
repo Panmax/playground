@@ -60,17 +60,14 @@ new Vue({
         },
         searchMusic: function () {
             $('#searchModal').modal('hide');
-            if (this.keyword == 'like') {
-                this.fetchMyFavoriteMusics();
-                return
-            }
             this.addSearchHistory(this.keyword);
             var xhr = new XMLHttpRequest();
             var self = this;
             xhr.open('GET', '/music/api/get_musics?keyword=' + this.keyword);
             xhr.onload = function () {
                 self.favorite_musics = null;
-                self.musics = JSON.parse(xhr.responseText)
+                self.musics = JSON.parse(xhr.responseText);
+                self.keyword = '';
             };
             xhr.send();
         },
