@@ -136,6 +136,14 @@ class Music(LObject):
         self.set('size', s)
 
     @property
+    def picture(self):
+        return self.get('picture')
+
+    @picture.setter
+    def picture(self, p):
+        self.set('picture', p)
+
+    @property
     def file(self):
         return self.get('file')
 

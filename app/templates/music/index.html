@@ -4,34 +4,40 @@
 
 {% block head %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='js/audiojs/audio.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='js/aplayer/APlayer.min.css') }}">
+    <script src="{{ url_for('static', filename='js/aplayer/APlayer.min.js') }}"></script>
 {% endblock %}
 
 {% block content_id %}music{% endblock %}
 
 {% block page_content %}
     <div class="row">
-        <div class="col-md-6 form-horizontal">
-            <div class="form-group">
-                <div class="col-md-12">
-                    <input type="text" name="name" class="form-control" id="music_name" placeholder="歌曲名/歌手/专辑/like" v-model="keyword" v-on:keyup.enter="searchMusic">
-                </div>
-            </div>
+{#        <div class="col-md-4 form-horizontal">#}
+{#            <div class="form-group">#}
+{#                <div class="col-md-12">#}
+{#                    <input type="text" name="name" class="form-control" id="music_name" placeholder="歌曲名/歌手/专辑/like" v-model="keyword" v-on:keyup.enter="searchMusic">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+        <div class="col-md-1">
+            <button class="btn btn-default btn-lg btn-block" v-on:click="clickSearchBtn">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
         </div>
-        <div class="col-md-6">
-            <audio preload="none" loop="loop"/>
+        <div class="col-md-11">
+            <div id="player" class="aplayer"></div>
         </div>
     </div>
 
     <div class="col-md-12" v-if="musics">
         <table class="table table-hover">
             <tr>
-                <th width="5%">收藏</th>
-                <th width="15%">歌曲</th>
-                <th width="15%">歌手</th>
-                <th width="20%">专辑</th>
+                <th width="15%">收藏</th>
+                <th width="25%">歌曲</th>
+                <th width="20%">歌手</th>
+                <th width="30%">专辑</th>
                 <th width="15%">播放</th>
-                <th width="30%">下载地址</th>
+{#                <th width="30%">下载地址</th>#}
             </tr>
             <tr v-for="music in musics">
                 <td>
@@ -48,25 +54,29 @@
                 <td>{{music.singer_name}}</td>
                 <td>{{music.album_name}}</td>
                 <td>
-                    <div class="dropdown">
-                        <button type="button" id="dLabel" class="btn btn-success btn-xs" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">Play <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dLabel">
-                            <li v-for="audition in music.audition_list">
-                                <a v-on:click="playMusic(audition.url)">{{audition.typeDescription}}</a>
-                            </li>
-                        </ul>
-                    </div>
+{#                    <div class="dropdown">#}
+{#                        <button type="button" id="dLabel" class="btn btn-success btn-xs" data-toggle="dropdown"#}
+{#                                aria-haspopup="true" aria-expanded="false">Play <span class="caret"></span>#}
+{#                        </button>#}
+{#                        <ul class="dropdown-menu" aria-labelledby="dLabel">#}
+{#                            <li v-for="audition in music.audition_list">#}
+{#                                <a v-on:click="playMusic(audition.url)">{{audition.typeDescription}}</a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </div>#}
+                    <button class="btn btn-default"
+                            v-on:click="playMusic(music, 'xiami')">
+                        <span class="glyphicon glyphicon-play"></span>
+                    </button>
                 </td>
-                <td>
-                    <div class="row">
-                        <button type="button" class="btn btn-primary btn-xs"
-                               v-for="audition in music.audition_list" v-on:click="downLoad(audition.url)">{{audition.typeDescription}}</button>
-                        <button type="button" class="btn btn-primary btn-xs"
-                               v-for="ll in music.ll_list" v-on:click="downLoad(ll.url)">{{ll.typeDescription}}</button>
-                    </div>
-                </td>
+{#                <td>#}
+{#                    <div class="row">#}
+{#                        <button type="button" class="btn btn-primary btn-xs"#}
+{#                               v-for="audition in music.audition_list" v-on:click="downLoad(audition.url)">{{audition.typeDescription}}</button>#}
+{#                        <button type="button" class="btn btn-primary btn-xs"#}
+{#                               v-for="ll in music.ll_list" v-on:click="downLoad(ll.url)">{{ll.typeDescription}}</button>#}
+{#                    </div>#}
+{#                </td>#}
             </tr>
         </table>
     </div>
@@ -74,11 +84,12 @@
     <div class="col-md-12" v-if="favorite_musics">
         <table class="table table-hover">
             <tr>
-                <th width="5%">收藏</th>
-                <th width="15%">歌曲</th>
-                <th width="15%">歌手</th>
-                <th width="20%">专辑</th>
+                <th width="15%">收藏</th>
+                <th width="25%">歌曲</th>
+                <th width="20%">歌手</th>
+                <th width="30%">专辑</th>
                 <th width="15%">播放</th>
+{#                <th width="30%">下载地址</th>#}
             </tr>
             <tr v-for="music in favorite_musics">
                 <td>
@@ -95,11 +106,34 @@
                 <td>{{music.singer_name}}</td>
                 <td>{{music.album_name}}</td>
                 <td>
-                    <button class="btn btn-success btn-sm" v-on:click="playMusic(music.url)">Play</button>
+{#                    <div class="dropdown">#}
+{#                        <button type="button" id="dLabel" class="btn btn-success btn-xs" data-toggle="dropdown"#}
+{#                                aria-haspopup="true" aria-expanded="false">Play <span class="caret"></span>#}
+{#                        </button>#}
+{#                        <ul class="dropdown-menu" aria-labelledby="dLabel">#}
+{#                            <li v-for="audition in music.audition_list">#}
+{#                                <a v-on:click="playMusic(audition.url)">{{audition.typeDescription}}</a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </div>#}
+                    <button class="btn btn-default"
+                            v-on:click="playMusic(music, 'me')">
+                        <span class="glyphicon glyphicon-play"></span>
+                    </button>
                 </td>
+{#                <td>#}
+{#                    <div class="row">#}
+{#                        <button type="button" class="btn btn-primary btn-xs"#}
+{#                               v-for="audition in music.audition_list" v-on:click="downLoad(audition.url)">{{audition.typeDescription}}</button>#}
+{#                        <button type="button" class="btn btn-primary btn-xs"#}
+{#                               v-for="ll in music.ll_list" v-on:click="downLoad(ll.url)">{{ll.typeDescription}}</button>#}
+{#                    </div>#}
+{#                </td>#}
             </tr>
         </table>
     </div>
+
+    {% include "music/modal-search.html" %}
 {% endblock %}
 {% block scripts %}
     {{ super() }}

@@ -98,6 +98,7 @@ def api_music_favorite():
             favorite_musics = Query(Music)\
                 .contained_in('song_id', [music_favorite.song_id for music_favorite in music_favorites])\
                 .include('file.url')\
+                .include('picture.url')\
                 .find()
             results = []
             for music in favorite_musics:

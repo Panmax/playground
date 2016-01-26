@@ -9,6 +9,7 @@ def format_music(music):
         'song_name': music.song_name,
         'singer_name': music.singer_name,
         'album_name': music.album_name,
-        'url': music.file.url
+        'url': music.file.url,
+        'pic_url': music.picture.url if music.picture else ''
     }
     return _music

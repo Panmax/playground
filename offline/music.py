@@ -42,11 +42,18 @@ class MusicDownload(task.OfflineTask):
             bit_rate = audition.get('bitRate')
             type_description = audition.get('typeDescription')
             size = audition.get('size')
+            pic_url = music.get('mv_list')[0].get('pic_url') if music.get('mv_list') else ''
 
             if not Query(Music).equal_to('song_id', song_id).find():
                 filename = u'{}-{}.mp3'.format(song_name, singer_name)
                 f = File(filename, StringIO.StringIO(urllib2.urlopen(url).read()))
                 f.save()
+
+                picture = None
+                if pic_url:
+                    picture_name = u'{}-{}.jpg'.format(song_name, singer_name)
+                    picture = File(picture_name, StringIO.StringIO(urllib2.urlopen(pic_url).read()))
+                    picture.save()
 
                 m = Music()
                 m.file = f
@@ -61,4 +68,6 @@ class MusicDownload(task.OfflineTask):
                 m.singer_id = singer_id
                 m.album_id = album_id
                 m.album_name = album_name
+                if picture:
+                    m.picture = picture
                 m.save()

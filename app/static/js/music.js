@@ -8,36 +8,58 @@ new Vue({
     data: {
         play_url: '',
         is_playing: false,
-        as: audiojs.createAll({
-                trackEnded: function () {
-                    audio.load(url);
-                    audio.play()
-                }
-            }),
+        ap: new APlayer({
+            element: document.getElementById('player'),
+            narrow: false,
+            autoplay: false,
+            showlrc: false,
+            theme: '#e6d0b2',
+            music: {
+                title: 'Preparation',
+                author: 'Hans Zimmer',
+                url: 'http://ac-0szrvxda.clouddn.com/0d18477ac0cec0fb.mp3',
+                pic: 'http://7xifn9.com1.z0.glb.clouddn.com/Preparation.jpg'
+            }
+        }),
         keyword: '',
         musics: null,
         favorite_musics: null
     },
 
     created: function () {
+        this.ap.init();
     },
 
     watch: {
     },
 
     methods: {
-        playMusic: function (url) {
-            this.play_url = url;
-            this.is_playing = true;
-            var audio = this.as[0];
-            audio.load(url);
-            audio.play();
-            console.log(this.play_url)
+        playMusic: function (music, from) {
+            if (from == 'xiami') {
+                this.ap.music.url = music.audition_list[music.audition_list.length-1].url;
+                this.ap.music.title = music.song_name;
+                this.ap.music.author = music.singer_name;
+                this.ap.music.pic = null;
+                if (music.hasOwnProperty('mv_list')) {
+                    this.ap.music.pic = music.mv_list[0].pic_url;
+                }
+                this.ap.init();
+            } else if(from == 'me') {
+                this.ap.music.url = music.url;
+                this.ap.music.title = music.song_name;
+                this.ap.music.author = music.singer_name;
+                this.ap.music.pic = null;
+                if (music.hasOwnProperty('pic_url') &&  music.pic_url != '') {
+                    this.ap.music.pic = music.pic_url;
+                }
+                this.ap.init();
+            }
         },
         downLoad: function (url) {
             window.open(url)
         },
         searchMusic: function () {
+            $('#searchModal').modal('hide');
             if (this.keyword == 'like') {
                 this.fetchMyFavoriteMusics();
                 return
@@ -112,6 +134,12 @@ new Vue({
                 self.favorite_musics = JSON.parse(xhr.responseText);
             };
             xhr.send();
+        },
+        clickSearchBtn: function () {
+            $('#searchModal').modal('show');
+            $('#searchModal').on('shown.bs.modal', function () {
+                $('#searchInput').focus();
+            });
         }
     }
 });
