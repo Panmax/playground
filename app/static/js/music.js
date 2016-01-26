@@ -23,11 +23,13 @@ new Vue({
         }),
         keyword: '',
         musics: null,
-        favorite_musics: null
+        favorite_musics: null,
+        searching: false
     },
 
     created: function () {
         this.ap.init();
+        $('#loading').modal('show');
     },
 
     watch: {
@@ -63,8 +65,12 @@ new Vue({
             this.addSearchHistory(this.keyword);
             var xhr = new XMLHttpRequest();
             var self = this;
+            self.searching = true;
+            self.musics = null;
+            self.favorite_musics = null;
             xhr.open('GET', '/music/api/get_musics?keyword=' + this.keyword);
             xhr.onload = function () {
+                self.searching = false;
                 self.favorite_musics = null;
                 self.musics = JSON.parse(xhr.responseText);
                 self.keyword = '';
@@ -120,9 +126,13 @@ new Vue({
         fetchMyFavoriteMusics: function () {
             var xhr = new XMLHttpRequest();
             var self = this;
+            self.searching = true;
+            self.musics = null;
+            self.favorite_musics = null;
             xhr.open('GET', '/music/api/music_favorite');
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onload = function () {
+                self.searching = false;
                 if (xhr.status == 401) {
                     alert('请先登录');
                     return;

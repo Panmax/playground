@@ -6,6 +6,8 @@
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='js/aplayer/APlayer.min.css') }}">
     <script src="{{ url_for('static', filename='js/aplayer/APlayer.min.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}">
 {% endblock %}
 
 {% block content_id %}music{% endblock %}
@@ -32,6 +34,10 @@
                 <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
             </button>
         </div>
+    </div>
+
+    <div class="col-md-12" v-if="searching && !musics && !favorite_musics">
+        <div class="loader">Loading...</div>
     </div>
 
     <div class="col-md-12" v-if="musics">
