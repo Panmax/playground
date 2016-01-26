@@ -18,7 +18,7 @@ new Vue({
                 title: 'Preparation',
                 author: 'Hans Zimmer',
                 url: 'http://ac-0szrvxda.clouddn.com/0d18477ac0cec0fb.mp3',
-                pic: 'http://7xifn9.com1.z0.glb.clouddn.com/Preparation.jpg'
+                pic: 'http://ac-0szrvxda.clouddn.com/a88762ec37c5efdd.jpg'
             }
         }),
         keyword: '',
