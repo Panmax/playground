@@ -13,7 +13,6 @@ from app.models import Music
 
 def download_sync_music(music):
     song_name = music.get('song_name')
-    print song_name
     song_id = music.get('song_id')
     singer_name = music.get('singer_name')
     singer_id = music.get('singer_id')
