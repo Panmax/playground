@@ -5,8 +5,6 @@ from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.login import LoginManager
 
-import gevent
-from gevent import monkey
 
 from leancloud import Query
 
@@ -18,7 +16,6 @@ from utils.redis_op import init_redis
 
 __author__ = 'pan'
 logging.basicConfig(level=logging.INFO)
-monkey.patch_all()
 
 bootstrap = Bootstrap()
 login_manager = LoginManager()
@@ -34,11 +31,11 @@ def load_user(user_id):
         return user
 
 
-def schedule():
-    for cls in offline.__all__:
-        instance = cls(init_redis())
-        gevent.spawn(instance.loop)
-schedule()
+# def schedule():
+#     for cls in offline.__all__:
+#         instance = cls(init_redis())
+#         gevent.spawn(instance.loop)
+# schedule()
 
 
 def create_app(config_name):

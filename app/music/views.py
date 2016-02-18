@@ -8,6 +8,7 @@ from flask.ext.login import login_required, current_user
 
 from leancloud import user, Query, LeanCloudError
 
+from .musics import download_music
 from utils import redis_op, format
 from . import music as music_blueprint
 from ..models import MusicSearchHistory, MusicFavorite, Music
@@ -36,6 +37,8 @@ def api_get_musics():
             music_favorite_data_object[music.get('song_id')] = False
             valid_musics.append(music)
 
+    download_music(valid_musics)
+
     # 获取用户喜欢的音乐
     musics_favorite = []
     if current_user.is_authenticated():
@@ -50,9 +53,9 @@ def api_get_musics():
     for music in valid_musics:
         music['is_like'] = music_favorite_data_object[music.get('song_id')]
 
-    redis_op.notify('channel:music:download', event={
-        'musics': valid_musics
-    })
+    # redis_op.notify('channel:music:download', event={
+    #     'musics': valid_musics
+    # })
     return make_response(json.dumps(valid_musics))
 
 
